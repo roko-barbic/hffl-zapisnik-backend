@@ -1,0 +1,52 @@
+[
+    {
+        "FirstName": "Ivan",
+        "LastName": "Ivić",
+        "DateOfBirth": "1995-01-01"
+    },
+    {
+        "FirstName": "Marko",
+        "LastName": "Marić",
+        "DateOfBirth": "1996-02-02"
+    },
+    {
+        "FirstName": "Petar",
+        "LastName": "Perić",
+        "DateOfBirth": "1997-03-03"
+    },
+    {
+        "FirstName": "Ante",
+        "LastName": "Antić",
+        "DateOfBirth": "1998-04-04"
+    },
+    {
+        "FirstName": "Josip",
+        "LastName": "Josić",
+        "DateOfBirth": "1999-05-05"
+    },
+    {
+        "FirstName": "Tomislav",
+        "LastName": "Tomić",
+        "DateOfBirth": "2000-06-06"
+    },
+    {
+        "FirstName": "Mario",
+        "LastName": "Marić",
+        "DateOfBirth": "2001-07-07"
+    },
+    {
+        "FirstName": "Luka",
+        "LastName": "Lukić",
+        "DateOfBirth": "2002-08-08"
+    },
+    {
+        "FirstName": "Nikola",
+        "LastName": "Nikolić",
+        "DateOfBirth": "2003-09-09"
+    },
+    {
+        "FirstName": "Filip",
+        "LastName": "Filić",
+        "DateOfBirth": "2004-10-10"
+    }
+]
