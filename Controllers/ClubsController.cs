@@ -67,6 +67,7 @@ namespace roko_test.Controllers
                 clubDto.Win=win;
                 clubDto.Draw=draw;
                 clubDto.Loss=loss;
+                clubDto.id = club.Id;
                 clubsDto.Add(clubDto);
             }
             
@@ -76,23 +77,80 @@ namespace roko_test.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<Club> Get(int id)
+        public async Task<ClubPlayersDto> GetPlayers(int id)
         {
-            var club = await _context.Clubs.FirstOrDefaultAsync(c => c.Id == id);
+            var club = await _context.Clubs
+            .FirstOrDefaultAsync(c => c.Id == id);
+            var players = await _context.Players.Where(a => a.Club == club).ToListAsync();
+            var games = await _context.Games
+                    .Where(a => a.Club_Away == club || a.Club_Home == club)
+                    .Include(e => e.Events)
+                    .ToListAsync();
+            
+            var playersStatDto = new List<PlayerStatDto>();
 
-            if (club == null)
+            foreach (var player in players)
             {
-                return null; // Return a 404 Not Found response if the club is not found
-            }
-
-            var clubDto = new Club
-            {
-                Name = club.Name,
-                City = club.City
-            };
-
-            return clubDto;
-        }
+                var TDPass = 0;
+                var TDCatch = 0;
+                var IntPass = 0;
+                int IntCatch = 0;
+                var IntTD = 0;
+                var XPPass = 0;
+                var XPCatch = 0;
+                var Safety = 0;
+                foreach (var game in games)
+                        {
+                            var events = game.Events.ToList();
+                            foreach (var eventt in events)
+                            {
+                                //TD
+                                if(eventt.Player_One == player && eventt.Type == 1){
+                                    TDPass++;
+                                }
+                                else if(eventt.Player_Two == player && eventt.Type == 1){
+                                    TDCatch++;
+                                }
+                                //obican INT
+                                else if(eventt.Player_One == player && eventt.Type == 2){
+                                    IntPass++;
+                                }
+                                else if(eventt.Player_Two == player && eventt.Type == 2){
+                                    IntCatch++;
+                                }  
+                                //picksix
+                                else if(eventt.Player_One == player && eventt.Type == 3){
+                                    IntPass++;
+                                }
+                                else if(eventt.Player_Two == player && eventt.Type == 3){
+                                    IntCatch++;
+                                    IntTD++;
+                                    TDCatch++;
+                                }
+                                //XP
+                                else if(eventt.Player_One == player && (eventt.Type == 4 || eventt.Type == 5)){
+                                    XPPass++;
+                                }
+                                else if(eventt.Player_Two == player && (eventt.Type == 4 || eventt.Type == 5)){
+                                    XPCatch++;
+                                }
+                                //Safety
+                                else if(eventt.Player_Two == player && eventt.Type == 6){
+                                Safety++;
+                                }
+                            }
+                        }
+                        var playerDto = new PlayerStatDto(player.FirstName, player.LastName, TDPass, TDCatch, IntPass, IntCatch, IntTD, XPPass, XPCatch, Safety);
+                        playersStatDto.Add(playerDto);
+                    }
+                    playersStatDto
+                        .OrderByDescending(a => a.TDPass)
+                        .ThenByDescending(b => b.TDCatch)
+                        .ThenByDescending(c => c.IntCatch);
+                    var clubPlayerStat = new ClubPlayersDto(club.Name, playersStatDto);
+                    return clubPlayerStat;
+        
+                }
 
     }
 }
