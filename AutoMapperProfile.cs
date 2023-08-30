@@ -10,7 +10,8 @@ public class AutoMapperProfile : Profile
     {
        CreateMap<Tournament, TournamentDTO>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date));
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
       
     }
