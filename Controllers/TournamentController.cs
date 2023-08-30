@@ -70,51 +70,73 @@ public class TournamentController : ControllerBase
     //     return Tournament;
     // }
 
-    [HttpGet("{id}")]
-    public async Task<TournamentDTO2> GetTournamentInfoDTO(int id)
+    // [HttpGet("{id}")]
+    // public async Task<TournamentDTO2> GetTournamentInfoDTO(int id)
+    // {
+    //     var tournament = await _context.Tournaments
+    //         .Include(t => t.Clubs)
+    //         .ThenInclude(c => c.Players)
+    //         .FirstOrDefaultAsync(c => c.Id == id);
+
+    //     //var clubsOnTournament = await _context.Clubs.Where(c => c.Id == id).ToListAsync();
+
+    //     if (tournament == null)
+    //     {
+    //         return null;
+
+    //     }
+
+    //     var clubsInTournament = tournament.Clubs.ToList();
+    //     var clubsInTournamentDTO = new List<ClubDto>();
+    //     foreach (var club in clubsInTournament)
+    //     {
+    //         var clubDTO = new ClubDto();
+    //         clubDTO.City = club.City;
+    //         clubDTO.Name = club.Name;
+    //         var playersInClub = club.Players.ToList();
+    //         var playersInClubDTO = new List<PlayerDto>();
+    //         foreach (var player in playersInClub)
+    //         {
+    //             var PlayerDto = new PlayerDto(player.FirstName, player.LastName);
+    //             playersInClubDTO.Add(PlayerDto);
+    //         }
+    //         clubDTO.Players = playersInClubDTO;
+    //         clubsInTournamentDTO.Add(clubDTO);
+            
+    //     }
+
+    //     var Tournament = new TournamentDTO2
+    //     {
+    //         Id = id,
+    //         Name = tournament.Name,
+    //         Date = tournament.Date,
+    //         Clubs = clubsInTournamentDTO
+    //     };
+
+    //     return Tournament;
+    // }
+     [HttpGet("{id}")]
+    public async Task<TournametWithGamesDTO> GetTournamentInfoDTO(int id)
     {
         var tournament = await _context.Tournaments
-            .Include(t => t.Clubs)
-            .ThenInclude(c => c.Players)
+            .Include(t => t.Games)
+            .ThenInclude(r => r.Club_Home)
+            .Include(t => t.Games)
+            .ThenInclude(r => r.Club_Away)
             .FirstOrDefaultAsync(c => c.Id == id);
 
         //var clubsOnTournament = await _context.Clubs.Where(c => c.Id == id).ToListAsync();
-
-        if (tournament == null)
+        List<GameDtoShort> gamesDTO = new List<GameDtoShort>();;
+        foreach (var game in tournament.Games)
         {
-            return null;
-
+            gamesDTO.Add(new GameDtoShort(game.Id, 
+                new ClubDtoShort(game.Club_Home.Name), new ClubDtoShort(game.Club_Away.Name),
+                 game.Club_Home_Score, game.Club_Away_Score));
         }
-
-        var clubsInTournament = tournament.Clubs.ToList();
-        var clubsInTournamentDTO = new List<ClubDto>();
-        foreach (var club in clubsInTournament)
-        {
-            var clubDTO = new ClubDto();
-            clubDTO.City = club.City;
-            clubDTO.Name = club.Name;
-            var playersInClub = club.Players.ToList();
-            var playersInClubDTO = new List<PlayerDto>();
-            foreach (var player in playersInClub)
-            {
-                var PlayerDto = new PlayerDto(player.FirstName, player.LastName);
-                playersInClubDTO.Add(PlayerDto);
-            }
-            clubDTO.Players = playersInClubDTO;
-            clubsInTournamentDTO.Add(clubDTO);
-            
-        }
-
-        var Tournament = new TournamentDTO2
-        {
-            Id = id,
-            Name = tournament.Name,
-            Date = tournament.Date,
-            Clubs = clubsInTournamentDTO
-        };
-
-        return Tournament;
+        
+        return new TournametWithGamesDTO(tournament.Id, tournament.Name, tournament.Date, gamesDTO);
     }
+
 
     [HttpPost]
     public async Task<bool> Post([FromBody] CreateUser userFromApi)

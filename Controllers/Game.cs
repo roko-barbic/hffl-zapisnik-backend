@@ -47,10 +47,8 @@ public class GameController : ControllerBase
         gameDTO.Club_Away_Score = game.Club_Away_Score;
         gameDTO.Id = game.Id;
 
-        var homeClubDTO = new ClubDtoShort();
-        homeClubDTO.Name = game.Club_Home.Name;
-        var awayClubDTO = new ClubDtoShort();
-        awayClubDTO.Name = game.Club_Away.Name;
+        var homeClubDTO = new ClubDtoShort(game.Club_Home.Name);
+        var awayClubDTO = new ClubDtoShort(game.Club_Away.Name);
         gameDTO.Club_Home = homeClubDTO;
         gameDTO.Club_Away = awayClubDTO;
 
