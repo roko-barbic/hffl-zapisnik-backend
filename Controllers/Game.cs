@@ -56,10 +56,34 @@ public class GameController : ControllerBase
         foreach (var eventt in game.Events)
         {
             var eventDTO = new EventDto();
+            int isTherePlayer = 0;
             eventDTO.Id = eventt.Id;
             eventDTO.Player_One = new PlayerDto(eventt.Player_One.FirstName, eventt.Player_One.LastName);
             eventDTO.Player_Two = new PlayerDto(eventt.Player_Two.FirstName, eventt.Player_Two.LastName);
             eventDTO.Type = eventt.Type;
+            eventDTO.TeamGettingPoints=0;
+            foreach(var player in game.Club_Home.Players){
+                if(player.Id == eventt.Player_One.Id){
+                    if(eventt.Type == 1 || eventt.Type == 4 || eventt.Type == 5){
+                        eventDTO.TeamGettingPoints=1;
+                    }
+                    else{
+                        eventDTO.TeamGettingPoints=2;
+                    }
+                }
+            }
+            if( eventDTO.TeamGettingPoints==0){
+                foreach(var player in game.Club_Away.Players){
+                if(player.Id == eventt.Player_One.Id){
+                    if(eventt.Type == 1 || eventt.Type == 4 || eventt.Type == 5){
+                        eventDTO.TeamGettingPoints=2;
+                    }
+                    else{
+                        eventDTO.TeamGettingPoints=1;
+                    }
+                }
+            }
+            }
             eventsInGame.Add(eventDTO);
         }
         gameDTO.Events = eventsInGame;
