@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 using roko_test.Entities;
 using roko_test.Data;
+using BCrypt.Net;
 
 namespace roko_test.Seed;
 public static class DefaultSeeds
@@ -43,7 +44,7 @@ public static class DefaultSeeds
 
         //add clubs to tournaments
         // add 4 radnom clubs to every tournament
-        var clubs = await dataContext.Clubs.ToListAsync();
+        // var clubs = await dataContext.Clubs.ToListAsync();
         // var tournaments = await dataContext.Tournaments.ToListAsync();
         var rnd = new Random();
         // foreach (var tournament in tournaments)
@@ -127,6 +128,16 @@ public static class DefaultSeeds
         //     game.Club_Away_Score = 38 - i;
         //     i++;
         // }
+
+        //add admin
+
+        // var admin = new Admin();
+        // admin.FirstName = "Leon";
+        // admin.LastName = "Ljubas";
+        // admin.Username = "admin1";
+        // admin.PasswordHash = BCrypt.Net.BCrypt.HashPassword("adminPass123");
+        // dataContext.Admins.Add(admin);
+
         await dataContext.SaveChangesAsync();
         
         return true;
