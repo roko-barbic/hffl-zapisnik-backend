@@ -59,7 +59,7 @@ public static class DefaultSeeds
         // }
 
 
-        // //add events
+        //add events
         // var games = await dataContext.Games.ToListAsync();
         // foreach (var game in games)
         // {

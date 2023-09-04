@@ -89,6 +89,28 @@ public class GameController : ControllerBase
         gameDTO.Events = eventsInGame;
         return gameDTO;
     }
+
+    [HttpPost("api/games/{gameId}/events")]
+    public async Task<IActionResult> AddEventToGame(int gameId, [FromBody] EventPostDto eventDto)
+    {
+        // Check if the game with gameId exists, and handle errors if not found.
+        var game = await _context.Games.Include(b => b.Events).FirstOrDefaultAsync(a => a.Id == gameId);
+        // Map EventDto to Event entity
+
+        var newEvent = new Event();
+        var Player_One = await _context.Players.FirstOrDefaultAsync( b => b.Id == eventDto.Player_OneId);
+        newEvent.Player_One = Player_One;
+        var Player_Two = await _context.Players.FirstOrDefaultAsync( c => c.Id == eventDto.Player_OneId);
+        newEvent.Player_Two = Player_Two;
+        newEvent.Type = eventDto.Type;
+        var eventss = game.Events.ToList();
+        eventss.Add(newEvent);
+        game.Events = eventss;
+        
+        await _context.SaveChangesAsync();
+        return Ok(newEvent);
+    }
+
 }
 
 
