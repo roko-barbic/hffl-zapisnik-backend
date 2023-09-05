@@ -100,7 +100,7 @@ public class GameController : ControllerBase
         var newEvent = new Event();
         var Player_One = await _context.Players.FirstOrDefaultAsync( b => b.Id == eventDto.Player_OneId);
         newEvent.Player_One = Player_One;
-        var Player_Two = await _context.Players.FirstOrDefaultAsync( c => c.Id == eventDto.Player_OneId);
+        var Player_Two = await _context.Players.FirstOrDefaultAsync( c => c.Id == eventDto.Player_TwoId);
         newEvent.Player_Two = Player_Two;
         newEvent.Type = eventDto.Type;
         var eventss = game.Events.ToList();
