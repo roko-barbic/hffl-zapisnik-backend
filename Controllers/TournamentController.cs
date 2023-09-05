@@ -137,17 +137,20 @@ public class TournamentController : ControllerBase
         return new TournametWithGamesDTO(tournament.Id, tournament.Name, tournament.Date, gamesDTO);
     }
 
-
-    [HttpPost]
-    public async Task<bool> Post([FromBody] CreateUser userFromApi)
-    {
-        var user = new Player();
-        user.FirstName = userFromApi.FirstName;
-        user.LastName = userFromApi.LastName;
-        user.DateOfBirth = userFromApi.DateOfBirth.ToUniversalTime();
-        _context.Players.Add(user);
+    [HttpPost("/newGame/{tournamentId}")]
+    public async Task<IActionResult> AddGameToTournament(int tournamentId, [FromBody] GamePostDto game){
+        var tournament = await _context.Tournaments.Include(r => r.Games).FirstOrDefaultAsync(a => a.Id == tournamentId);
+        
+        var newGame = new Game();
+        var club_Home = await _context.Clubs.FirstOrDefaultAsync(b=> b.Id == game.Club_HomeId);
+        var Club_Away = await _context.Clubs.FirstOrDefaultAsync(c => c.Id == game.Club_AwayId);
+        newGame.Club_Home = club_Home;
+        newGame.Club_Away = Club_Away;
+        newGame.Tournament = tournament;
+        newGame.Club_Away_Score=0;
+        newGame.Club_Home_Score=0;
+        tournament.Games.Add(newGame);
         await _context.SaveChangesAsync();
-
-        return true;
+        return Ok();
     }
 }
