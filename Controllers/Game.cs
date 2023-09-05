@@ -106,9 +106,54 @@ public class GameController : ControllerBase
         var eventss = game.Events.ToList();
         eventss.Add(newEvent);
         game.Events = eventss;
+
+        //dodavanje bodova ekipi
+        bool isFoundPlayerOne = false;
+        foreach(var player in game.Club_Home.Players){
+                if(player.Id == Player_One.Id){
+                    isFoundPlayerOne = true;
+                    if(eventDto.Type == 1){
+                        game.Club_Home_Score+=6;
+                    }
+                    else if(eventDto.Type == 4){
+                        game.Club_Home_Score+=2;
+                    }
+                    else if(eventDto.Type == 5){
+                       game.Club_Home_Score+=4;
+                    }
+                    else if(eventDto.Type ==3){
+                        game.Club_Away_Score+=6;
+                    }
+                    else if(eventDto.Type ==6){
+                        game.Club_Away_Score+=2;
+                    }
+                }
+            }
+        if(!isFoundPlayerOne){
+            foreach(var player in game.Club_Away.Players){
+                if(player.Id == Player_One.Id){
+                    isFoundPlayerOne = true;
+                    if(eventDto.Type == 1){
+                        game.Club_Away_Score+=6;
+                    }
+                    else if(eventDto.Type == 4){
+                        game.Club_Away_Score+=2;
+                    }
+                    else if(eventDto.Type == 5){
+                       game.Club_Away_Score+=4;
+                    }
+                    else if(eventDto.Type ==3){
+                        game.Club_Home_Score+=6;
+                    }
+                    else if(eventDto.Type ==6){
+                        game.Club_Home_Score+=2;
+                    }
+                }
+            }
+        }
         
         await _context.SaveChangesAsync();
-        return Ok(newEvent);
+        return Ok(new GameDtoShort(gameId, new ClubDtoShort(game.Club_Home.Name), new ClubDtoShort(game.Club_Away.Name), game.Club_Home_Score, game.Club_Away_Score));
     }
 
 
