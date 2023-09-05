@@ -137,10 +137,10 @@ public class GameController : ControllerBase
                         game.Club_Away_Score+=6;
                     }
                     else if(eventDto.Type == 4){
-                        game.Club_Away_Score+=2;
+                        game.Club_Away_Score+=1;
                     }
                     else if(eventDto.Type == 5){
-                       game.Club_Away_Score+=4;
+                       game.Club_Away_Score+=2;
                     }
                     else if(eventDto.Type ==3){
                         game.Club_Home_Score+=6;
