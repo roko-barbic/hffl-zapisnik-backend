@@ -111,6 +111,42 @@ public class GameController : ControllerBase
         return Ok(newEvent);
     }
 
+
+
+    
+    [HttpGet("/gameIdShort")]
+    public async Task<GameIdDto> GetGameIds(int id)
+    {
+        var game = await _context.Games
+            .Include(t => t.Club_Home)
+            .ThenInclude( c => c.Players)
+            .Include(r => r.Club_Away)
+            .ThenInclude(j => j.Players)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        var gameDTO = new GameIdDto();
+        gameDTO.Id = id;
+
+        var homeClubDTO = new ClubIdDto(game.Club_Home.Name, game.Club_Home.Id);
+        var awayClubDTO = new ClubIdDto(game.Club_Away.Name, game.Club_Away.Id);
+
+        List<PlayerIdDto> playersHome= new List<PlayerIdDto>();
+        List<PlayerIdDto> playersAway = new List<PlayerIdDto>();
+        foreach (var player in game.Club_Home.Players)
+        {
+                playersHome.Add(new PlayerIdDto(player.FirstName, player.LastName, player.Id));
+        }
+            foreach (var player in game.Club_Away.Players)
+        {
+                playersAway.Add(new PlayerIdDto(player.FirstName, player.LastName, player.Id));
+        }
+        homeClubDTO.Players = playersHome;
+        awayClubDTO.Players = playersAway;
+        gameDTO.Club_Home = homeClubDTO;
+        gameDTO.Club_Away = awayClubDTO;
+        return gameDTO;
+    }
+
 }
 
 
