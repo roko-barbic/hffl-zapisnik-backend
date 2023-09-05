@@ -94,7 +94,7 @@ public class GameController : ControllerBase
     public async Task<IActionResult> AddEventToGame(int gameId, [FromBody] EventPostDto eventDto)
     {
         // Check if the game with gameId exists, and handle errors if not found.
-        var game = await _context.Games.Include(b => b.Events).FirstOrDefaultAsync(a => a.Id == gameId);
+        var game = await _context.Games.Include(b => b.Events).Include(c => c.Club_Home.Players).Include(d => d.Club_Away.Players).FirstOrDefaultAsync(a => a.Id == gameId);
         // Map EventDto to Event entity
 
         var newEvent = new Event();
