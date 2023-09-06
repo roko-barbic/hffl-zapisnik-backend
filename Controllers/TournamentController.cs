@@ -153,4 +153,17 @@ public class TournamentController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
+
+    [HttpPost("/newTournament")]
+    public async Task<IActionResult> AddNewTournament([FromBody] TournamentPostDTO tournament){
+        var newTournament = new Tournament
+    {
+        Name = tournament.Name,
+        Date = tournament.Date
+    };
+    var tournaments = _context.Tournaments;
+    tournaments.Add(newTournament);
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
 }
