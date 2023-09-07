@@ -195,12 +195,62 @@ public class GameController : ControllerBase
     [HttpDelete("/deleteEvent/{id}")]
     public async Task<IActionResult> DeleteEvent(int id)
     {
+       
         var eventInGame = await _context.Events.FirstOrDefaultAsync(a => a.Id == id);
+        
 
         if (eventInGame == null)
         {
             return NotFound();
         }
+        var game = await _context.Games.FirstOrDefaultAsync(b => b.Events.Contains(eventInGame));
+
+        var player_One = eventInGame.Player_One;
+
+        bool isFoundPlayerOne = false;
+        foreach(var player in game.Club_Home.Players){
+                if(player.Id == player_One.Id){
+                    isFoundPlayerOne = true;
+                    if(eventInGame.Type == 1){
+                        game.Club_Home_Score-=6;
+                    }
+                    else if(eventInGame.Type == 4){
+                        game.Club_Home_Score-=2;
+                    }
+                    else if(eventInGame.Type == 5){
+                       game.Club_Home_Score-=4;
+                    }
+                    else if(eventInGame.Type ==3){
+                        game.Club_Away_Score-=6;
+                    }
+                    else if(eventInGame.Type ==6){
+                        game.Club_Away_Score-=2;
+                    }
+                }
+            }
+          if(!isFoundPlayerOne){
+            foreach(var player in game.Club_Away.Players){
+                if(player.Id == player_One.Id){
+                    isFoundPlayerOne = true;
+                    if(eventInGame.Type == 1){
+                        game.Club_Away_Score+=6;
+                    }
+                    else if(eventInGame.Type == 4){
+                        game.Club_Away_Score+=1;
+                    }
+                    else if(eventInGame.Type == 5){
+                       game.Club_Away_Score+=2;
+                    }
+                    else if(eventInGame.Type ==3){
+                        game.Club_Home_Score+=6;
+                    }
+                    else if(eventInGame.Type ==6){
+                        game.Club_Home_Score+=2;
+                    }
+                }
+            }
+        }
+
 
         _context.Events.Remove(eventInGame);
         await _context.SaveChangesAsync();
