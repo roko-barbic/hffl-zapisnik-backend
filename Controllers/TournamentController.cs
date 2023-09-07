@@ -166,4 +166,20 @@ public class TournamentController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
+
+    [HttpDelete("/deleteTournament/{id}")]
+    public async Task<IActionResult> DeleteTournament(int id)
+    {
+        var tournament = await _context.Tournaments.FirstOrDefaultAsync(a => a.Id == id);
+
+        if (tournament == null)
+        {
+            return NotFound();
+        }
+
+        _context.Tournaments.Remove(tournament);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
 }

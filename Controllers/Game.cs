@@ -192,6 +192,22 @@ public class GameController : ControllerBase
         return gameDTO;
     }
 
+    [HttpDelete("/deleteEvent/{id}")]
+    public async Task<IActionResult> DeleteEvent(int id)
+    {
+        var eventInGame = await _context.Events.FirstOrDefaultAsync(a => a.Id == id);
+
+        if (eventInGame == null)
+        {
+            return NotFound();
+        }
+
+        _context.Events.Remove(eventInGame);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
 }
 
 
