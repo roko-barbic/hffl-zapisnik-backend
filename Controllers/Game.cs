@@ -203,7 +203,7 @@ public class GameController : ControllerBase
         {
             return NotFound();
         }
-        var game = await _context.Games.FirstOrDefaultAsync(b => b.Events.Contains(eventInGame));
+        var game = await _context.Games.Include(c=>c.Club_Home).ThenInclude(d => d.Players).Include(c=>c.Club_Away).ThenInclude(d => d.Players).FirstOrDefaultAsync(b => b.Events.Contains(eventInGame));
 
         var player_One = eventInGame.Player_One;
 
