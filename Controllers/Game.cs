@@ -196,7 +196,7 @@ public class GameController : ControllerBase
     public async Task<IActionResult> DeleteEvent(int id)
     {
        
-        var eventInGame = await _context.Events.FirstOrDefaultAsync(a => a.Id == id);
+        var eventInGame = await _context.Events.Include(s => s.Player_One).FirstOrDefaultAsync(a => a.Id == id);
         
 
         if (eventInGame == null)
