@@ -215,10 +215,10 @@ public class GameController : ControllerBase
                         game.Club_Home_Score-=6;
                     }
                     else if(eventInGame.Type == 4){
-                        game.Club_Home_Score-=2;
+                        game.Club_Home_Score-=1;
                     }
                     else if(eventInGame.Type == 5){
-                       game.Club_Home_Score-=4;
+                       game.Club_Home_Score-=2;
                     }
                     else if(eventInGame.Type ==3){
                         game.Club_Away_Score-=6;
@@ -233,19 +233,19 @@ public class GameController : ControllerBase
                 if(player.Id == player_One.Id){
                     isFoundPlayerOne = true;
                     if(eventInGame.Type == 1){
-                        game.Club_Away_Score+=6;
+                        game.Club_Away_Score-=6;
                     }
                     else if(eventInGame.Type == 4){
-                        game.Club_Away_Score+=1;
+                        game.Club_Away_Score-=1;
                     }
                     else if(eventInGame.Type == 5){
-                       game.Club_Away_Score+=2;
+                       game.Club_Away_Score-=2;
                     }
                     else if(eventInGame.Type ==3){
-                        game.Club_Home_Score+=6;
+                        game.Club_Home_Score-=6;
                     }
                     else if(eventInGame.Type ==6){
-                        game.Club_Home_Score+=2;
+                        game.Club_Home_Score-=2;
                     }
                 }
             }
