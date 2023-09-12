@@ -258,6 +258,25 @@ public class GameController : ControllerBase
         return Ok();
     }
 
+
+    
+    [HttpDelete("/deleteGame/{id}")]
+    public async Task<IActionResult> DeleteGame(int id)
+    {
+       
+        var game = await _context.Games.FirstOrDefaultAsync(a => a.Id == id);
+        
+
+        if (game == null)
+        {
+            return NotFound();
+        }
+        
+        _context.Games.Remove(game);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
 }
 
 
