@@ -264,14 +264,19 @@ public class GameController : ControllerBase
     public async Task<IActionResult> DeleteGame(int id)
     {
        
-        var game = await _context.Games.FirstOrDefaultAsync(a => a.Id == id);
+        var game = await _context.Games.Include(b=> b.Events).FirstOrDefaultAsync(a => a.Id == id);
         
+        var events = game.Events;
 
         if (game == null)
         {
             return NotFound();
         }
-        
+        foreach (var eventt in events)
+        {
+            _context.Events.Remove(eventt);
+        }
+
         _context.Games.Remove(game);
         await _context.SaveChangesAsync();
 
