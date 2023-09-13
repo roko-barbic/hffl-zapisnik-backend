@@ -255,7 +255,7 @@ public class GameController : ControllerBase
         _context.Events.Remove(eventInGame);
         await _context.SaveChangesAsync();
 
-        return Ok();
+        return Ok(new GameDtoShort(game.Id, new ClubDtoShort(game.Club_Home.Name), new ClubDtoShort(game.Club_Away.Name), game.Club_Home_Score, game.Club_Away_Score));
     }
 
 
