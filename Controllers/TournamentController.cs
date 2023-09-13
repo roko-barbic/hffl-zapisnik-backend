@@ -170,12 +170,24 @@ public class TournamentController : ControllerBase
     [HttpDelete("/deleteTournament/{id}")]
     public async Task<IActionResult> DeleteTournament(int id)
     {
-        var tournament = await _context.Tournaments.FirstOrDefaultAsync(a => a.Id == id);
+        var tournament = await _context.Tournaments.Include(b => b.Games).ThenInclude(c => c.Events).FirstOrDefaultAsync(a => a.Id == id);
 
+        
         if (tournament == null)
         {
             return NotFound();
         }
+
+        var games = tournament.Games;
+
+        foreach (var game in games)
+        {
+            foreach( var eventt in game.Events){
+                _context.Events.Remove(eventt);
+            }
+            _context.Games.Remove(game);
+        }
+        
 
         _context.Tournaments.Remove(tournament);
         await _context.SaveChangesAsync();
