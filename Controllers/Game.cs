@@ -64,7 +64,7 @@ public class GameController : ControllerBase
             eventDTO.TeamGettingPoints=0;
             foreach(var player in game.Club_Home.Players){
                 if(player.Id == eventt.Player_One.Id){
-                    if(eventt.Type == 1 || eventt.Type == 4 || eventt.Type == 5){
+                    if(eventt.Type == 1 || eventt.Type == 4 || eventt.Type == 5 || eventt.Type == 6){
                         eventDTO.TeamGettingPoints=1;
                     }
                     else{
@@ -75,7 +75,7 @@ public class GameController : ControllerBase
             if( eventDTO.TeamGettingPoints==0){
                 foreach(var player in game.Club_Away.Players){
                 if(player.Id == eventt.Player_One.Id){
-                    if(eventt.Type == 1 || eventt.Type == 4 || eventt.Type == 5){
+                    if(eventt.Type == 1 || eventt.Type == 4 || eventt.Type == 5 || eventt.Type == 6){
                         eventDTO.TeamGettingPoints=2;
                     }
                     else{
