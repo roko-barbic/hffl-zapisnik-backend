@@ -125,7 +125,7 @@ public class GameController : ControllerBase
                         game.Club_Away_Score+=6;
                     }
                     else if(eventDto.Type ==6){
-                        game.Club_Away_Score+=2;
+                        game.Club_Home_Score+=2;
                     }
                 }
             }
@@ -146,7 +146,7 @@ public class GameController : ControllerBase
                         game.Club_Home_Score+=6;
                     }
                     else if(eventDto.Type ==6){
-                        game.Club_Home_Score+=2;
+                        game.Club_Away_Score+=2;
                     }
                 }
             }
