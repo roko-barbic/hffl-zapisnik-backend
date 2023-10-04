@@ -5,6 +5,7 @@ using roko_test.Entities;
 using roko_test.DTO;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using AutoMapper;
+using System.Xml.XPath;
 
 namespace roko_test.Controllers;
 
@@ -93,9 +94,7 @@ public class GameController : ControllerBase
     [HttpPost("api/games/{gameId}/events")]
     public async Task<IActionResult> AddEventToGame(int gameId, [FromBody] EventPostDto eventDto)
     {
-        // Check if the game with gameId exists, and handle errors if not found.
         var game = await _context.Games.Include(b => b.Events).Include(c => c.Club_Home.Players).Include(d => d.Club_Away.Players).FirstOrDefaultAsync(a => a.Id == gameId);
-        // Map EventDto to Event entity
 
         var newEvent = new Event();
         var Player_One = await _context.Players.FirstOrDefaultAsync( b => b.Id == eventDto.Player_OneId);
@@ -112,19 +111,28 @@ public class GameController : ControllerBase
         foreach(var player in game.Club_Home.Players){
                 if(player.Id == Player_One.Id){
                     isFoundPlayerOne = true;
-                    if(eventDto.Type == 1){
+                    if(eventDto.Type == 1){                 //TD    PASS
                         game.Club_Home_Score+=6;
                     }
-                    else if(eventDto.Type == 4){
+                    else if(eventDto.Type == 4){            //XP    PASS
                         game.Club_Home_Score+=1;
                     }
-                    else if(eventDto.Type == 5){
+                    else if(eventDto.Type == 5){            //XP2   PASS
                        game.Club_Home_Score+=2;
                     }
-                    else if(eventDto.Type ==3){
+                    else if(eventDto.Type ==3){             //INT TD
                         game.Club_Away_Score+=6;
                     }
-                    else if(eventDto.Type ==6){
+                    else if(eventDto.Type ==6){             //SAF
+                        game.Club_Home_Score+=2;
+                    }
+                    else if(eventDto.Type == 7){            //TD RUN
+                        game.Club_Home_Score+=6;
+                    }
+                    else if(eventDto.Type == 8){            //XP RUN
+                        game.Club_Home_Score+=1;        
+                    }
+                    else if(eventDto.Type == 9){            //XP2 RUN
                         game.Club_Home_Score+=2;
                     }
                 }
@@ -146,6 +154,15 @@ public class GameController : ControllerBase
                         game.Club_Home_Score+=6;
                     }
                     else if(eventDto.Type ==6){
+                        game.Club_Away_Score+=2;
+                    }
+                    else if(eventDto.Type == 7){
+                        game.Club_Away_Score+=6;
+                    }
+                    else if(eventDto.Type == 8){
+                        game.Club_Away_Score+=1;
+                    }
+                    else if(eventDto.Type == 9){
                         game.Club_Away_Score+=2;
                     }
                 }
@@ -226,6 +243,16 @@ public class GameController : ControllerBase
                     else if(eventInGame.Type ==6){
                         game.Club_Away_Score-=2;
                     }
+                    else if(eventInGame.Type == 7){
+                        game.Club_Home_Score-=6;
+                    }
+                    else if(eventInGame.Type == 8){
+                        game.Club_Home_Score-=1;
+                    }
+                    else if(eventInGame.Type == 9){
+                        game.Club_Home_Score-=2;
+                    }
+                    
                 }
             }
           if(!isFoundPlayerOne){
@@ -247,6 +274,16 @@ public class GameController : ControllerBase
                     else if(eventInGame.Type ==6){
                         game.Club_Home_Score-=2;
                     }
+                    else if(eventInGame.Type == 7){
+                        game.Club_Away_Score-=6;
+                    }
+                    else if(eventInGame.Type == 8){
+                        game.Club_Away_Score-=1;
+                    }
+                    else if(eventInGame.Type == 9){
+                        game.Club_Away_Score-=2;
+                    }
+                    
                 }
             }
         }

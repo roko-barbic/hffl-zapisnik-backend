@@ -30,11 +30,13 @@ public class PlayerController : ControllerBase
         {
             var TDPass = 0;
             var TDCatch = 0;
+            var TDRun =0;
             var IntPass = 0;
             int IntCatch = 0;
             var IntTD = 0;
             var XPPass = 0;
             var XPCatch = 0;
+            var XPRun = 0;
             var Safety = 0;
             var selectedGames = games.Where(a => a.Club_Away == player.Club || a.Club_Home == player.Club);
             foreach (var game in selectedGames)
@@ -76,9 +78,17 @@ public class PlayerController : ControllerBase
                     else if(eventt.Player_Two == player && eventt.Type == 6){
                        Safety++;
                     }
+                    //TD RUN
+                    else if(eventt.Player_Two == player && eventt.Type == 7){
+                        TDRun++;
+                    }
+                    //XP RUN
+                    else if(eventt.Player_Two == player && (eventt.Type == 8 || eventt.Type==9)){
+                        XPRun++;
+                    }
                 }
             }
-            var playerDto = new PlayerStatDto(player.FirstName, player.LastName, TDPass, TDCatch, IntPass, IntCatch, IntTD, XPPass, XPCatch, Safety);
+            var playerDto = new PlayerStatDto(player.FirstName, player.LastName, TDPass, TDCatch, TDRun, IntPass, IntCatch, IntTD, XPPass, XPCatch, XPRun, Safety);
             playersStatDto.Add(playerDto);
         }
         return playersStatDto
@@ -106,23 +116,4 @@ public class PlayerController : ControllerBase
         }
     }
 
-    // [HttpPost]
-    // public async Task<bool> Post([FromBody] CreateUser userFromApi)
-    // {
-    //     var user = new User();
-    //     user.Username = userFromApi.Username;
-    //     user.FirstName = userFromApi.FirstName;
-    //     user.LastName = userFromApi.LastName;
-    //     user.Email = userFromApi.Email;
-    //     user.DateOfBirth = userFromApi.DateOfBirth.ToUniversalTime();
-    //     user.PhoneNumber = userFromApi.PhoneNumber;
-    //     user.Address = userFromApi.Address;
-    //     user.City = userFromApi.City;
-    //     user.State = userFromApi.State;
-    //     user.Country = userFromApi.Country;
-    //     _context.Users.Add(user);
-    //     await _context.SaveChangesAsync();
-
-    //     return true;
-    // }
 }
